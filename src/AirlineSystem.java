@@ -6,7 +6,29 @@ public class AirlineSystem {
     //ArrayList<Passenger> passengerArrayList = new ArrayList<Passenger>();
     //Admin admin = new Admin("Arash Purfallah" , "Admin1234");
     //HashMap<String, Passenger> passengerHashMap = new HashMap<String, Passenger>();
-    //==================================================================================================================
+    private HashMap<String, Passenger> passengerHashMap;
+    private HashMap < String , Flight > flightHashMap;
+    public AirlineSystem() {
+        this.passengerHashMap = new HashMap<String, Passenger>();
+        this.flightHashMap = new HashMap<String , Flight>();
+    }
+
+    public HashMap<String, Passenger> getPassengerHashMap() {
+        return passengerHashMap;
+    }
+
+    public void setPassengerHashMap(HashMap<String, Passenger> passengerHashMap) {
+        this.passengerHashMap = passengerHashMap;
+    }
+
+    public HashMap<String, Flight> getFlightHashMap() {
+        return flightHashMap;
+    }
+
+    public void setFlightHashMap(HashMap<String, Flight> flightHashMap) {
+        this.flightHashMap = flightHashMap;
+    }
+//==================================================================================================================
 
     /**
      * This method is for sign up for passengers.
@@ -141,9 +163,9 @@ public class AirlineSystem {
         admin.setUserName("Arash Purfallah");
         admin.setPassword("admin1234");
         AirlineSystem airlineSystem = new AirlineSystem();
-        HashMap<String, Passenger> passengerHashMap = new HashMap<String, Passenger>();
-        airlineSystem.signUp(passengerHashMap , passenger , admin);
+        //HashMap<String, Passenger> passengerHashMap = new HashMap<String, Passenger>();
+        airlineSystem.signUp(airlineSystem.getPassengerHashMap() , passenger , admin);
         //----------------------------------------------------------------------------------------------
-        airlineSystem.signIn(passengerHashMap , admin);
+        airlineSystem.signIn(airlineSystem.getPassengerHashMap() , admin);
     }
 }
