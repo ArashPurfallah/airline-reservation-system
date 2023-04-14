@@ -279,6 +279,7 @@ public class Passenger {
      */
     public void addCharge(Passenger passenger)
     {
+        Utils utils = new Utils();
         Scanner scanner = new Scanner(System.in);
         System.out.println("Welcome to add charge section :)");
         System.out.println("Personal information : ");
@@ -287,10 +288,18 @@ public class Passenger {
         System.out.print("Charge : " + passenger.getCharge());
         System.out.println();
         System.out.print("Please write the amount that you want to add : ");
-        int charge = scanner.nextInt();
-        charge = charge + passenger.getCharge();
-        passenger.setCharge(charge);
-        System.out.println("Your money has been added successfully :)");
+        String charge1 = scanner.nextLine();
+        if (utils.isValidNumber(charge1))
+        {
+            int charge = Integer.parseInt(charge1);
+//        int charge = scanner.nextInt();
+            charge = charge + passenger.getCharge();
+            passenger.setCharge(charge);
+            System.out.println("Your money has been added successfully :)");
+        }else
+        {
+            System.out.println("your number is not valid :(");
+        }
     }
     //==================================================================================================================
 
@@ -313,8 +322,13 @@ public class Passenger {
                 {
                     int price = passenger.getCharge() - flightHashMap.get(flightId).getPrice();
                     passenger.setCharge(price);
-                    ticketHashMap.put(ticketId + 1 , flightHashMap.get(flightId));
+                    ticketId = ticketId + 1;
+                    ticketHashMap.put(ticketId , flightHashMap.get(flightId));
                     System.out.println("Your flight has been registered successfully :)");
+                    Ticket ticket = new Ticket();
+                    ticket.setTicketId(ticketId);
+                    ticket.setFlightId(flightId);
+                    ticket.setPassengerUserName(passenger.getUserName());
                     if (flightPassengersHashMap.containsKey(flightHashMap.get(flightId)))
                     {
                         flightPassengersHashMap.get(flightHashMap.get(flightId)).add(passenger);
@@ -356,48 +370,58 @@ public class Passenger {
      */
     public void ticketCancellation(HashMap<Integer , Flight> ticketHashMap , Passenger passenger , HashMap <Flight , ArrayList <Passenger>> flightPassengersHashMap)
     {
+        Utils utils = new Utils();
         Scanner scanner = new Scanner(System.in);
         System.out.println("Welcome to ticket cancellation section :)");
         System.out.print("Please enter ticket id : ");
         String ticketId = scanner.nextLine();
-        int ticketId1 = Integer.parseInt(ticketId);
-        if (ticketHashMap.containsKey(ticketId1))
+        if (utils.isValidNumber(ticketId))
         {
-            System.out.println("Origin : " + ticketHashMap.get(ticketId1).getOrigin());
-            System.out.println("Destination : " + ticketHashMap.get(ticketId1).getDestination());
-            System.out.println("Date : " + ticketHashMap.get(ticketId1).getDate());
-            System.out.println("Time : " + ticketHashMap.get(ticketId1).getTime());
-            System.out.println("Price : " + ticketHashMap.get(ticketId1).getPrice());
-            System.out.println("Seats : " + ticketHashMap.get(ticketId1).getSeats());
-            System.out.println("Are you sure you want to cancel it?");
-            System.out.println("1 - yes");
-            System.out.println("2 - No");
-            while (true)
+            int ticketId1 = Integer.parseInt(ticketId);
+            if (ticketHashMap.containsKey(ticketId1))
             {
-                String command = scanner.nextLine();
-                if (command.equals("1"))
+                System.out.println("Origin : " + ticketHashMap.get(ticketId1).getOrigin());
+                System.out.println("Destination : " + ticketHashMap.get(ticketId1).getDestination());
+                System.out.println("Date : " + ticketHashMap.get(ticketId1).getDate());
+                System.out.println("Time : " + ticketHashMap.get(ticketId1).getTime());
+                System.out.println("Price : " + ticketHashMap.get(ticketId1).getPrice());
+                System.out.println("Seats : " + ticketHashMap.get(ticketId1).getSeats());
+                System.out.println("Are you sure you want to cancel it?");
+                System.out.println("1 - yes");
+                System.out.println("2 - No");
+                while (true)
                 {
-                    ticketHashMap.remove(ticketId1);
-                    int price = passenger.getCharge() + ticketHashMap.get(ticketId1).getPrice();
-                    passenger.setCharge(price);
-                    System.out.println("Your flight is canceled ;)");
-                    flightPassengersHashMap.get(ticketHashMap.get(ticketId1)).remove(passenger);
-                    break;
-                }else
-                {
-                    if (command.equals("2"))
+                    String command = scanner.nextLine();
+                    if (command.equals("1"))
                     {
-                        System.out.println("Your flight is not canceled ;)");
+                        int price = passenger.getCharge() + ticketHashMap.get(ticketId1).getPrice();
+                        passenger.setCharge(price);
+                        int seats = ticketHashMap.get(ticketId1).getSeats() + 1;
+                        ticketHashMap.get(ticketId1).setPrice(seats);
+                        flightPassengersHashMap.get(ticketHashMap.get(ticketId1)).remove(passenger);
+                        ticketHashMap.remove(ticketId1);
+                        System.out.println("Your flight is canceled ;)");
+//                    flightPassengersHashMap.get(ticketHashMap.get(ticketId1)).remove(passenger);
                         break;
                     }else
                     {
-                        System.out.println("Invalid :|");
+                        if (command.equals("2"))
+                        {
+                            System.out.println("Your flight is not canceled ;)");
+                            break;
+                        }else
+                        {
+                            System.out.println("Invalid :|");
+                        }
                     }
                 }
+            }else
+            {
+                System.out.println("Not found :(");
             }
         }else
         {
-            System.out.println("Not found :(");
+            System.out.println("your ticket id is not valid :(");
         }
     }
     //==================================================================================================================
@@ -407,8 +431,11 @@ public class Passenger {
      */
     public void searchFlightTickets(HashMap <String , ArrayList<String>> searchHashMap , HashMap < String , Flight > flightHashMap)
     {
+        Utils utils = new Utils();
         Scanner scanner = new Scanner(System.in);
         ArrayList<String> fields = new ArrayList<String>();
+        ArrayList<String> searchIds = new ArrayList<String>();
+        ArrayList<String> flightIds = new ArrayList<String>();
         System.out.println("Welcome to search flight tickets section :)");
         System.out.println("Which filters do you want to have on your flight ? ");
         System.out.println("1 - flight id");
@@ -419,7 +446,6 @@ public class Passenger {
             String command = scanner.nextLine();
             if (command.equals("1"))
             {
-//                String flightDetail = scanner.nextLine();
                 System.out.print("Please enter the flight id you want : ");
                 String instanceFlightId = scanner.nextLine();
                 fields.add("flight id : " + instanceFlightId);
@@ -443,10 +469,12 @@ public class Passenger {
             String command = scanner.nextLine();
             if (command.equals("1"))
             {
-//                String flightDetail = scanner.nextLine();
                 System.out.print("Please enter the origin you want : ");
                 String instanceOrigin = scanner.nextLine();
-                fields.add("origin : " + instanceOrigin);
+                if (utils.isValidCity(instanceOrigin))
+                {
+                    fields.add("origin : " + instanceOrigin);
+                }
                 break;
             }else
             {
@@ -467,10 +495,12 @@ public class Passenger {
             String command = scanner.nextLine();
             if (command.equals("1"))
             {
-//                String flightDetail = scanner.nextLine();
                 System.out.print("Please enter the destination you want : ");
                 String instanceDestination = scanner.nextLine();
-                fields.add("destination : " + instanceDestination);
+                if (utils.isValidCity(instanceDestination))
+                {
+                    fields.add("destination : " + instanceDestination);
+                }
                 break;
             }else
             {
@@ -491,10 +521,12 @@ public class Passenger {
             String command = scanner.nextLine();
             if (command.equals("1"))
             {
-//                String flightDetail = scanner.nextLine();
                 System.out.print("Please enter the date you want : ");
                 String instanceDate = scanner.nextLine();
-                fields.add("date : " + instanceDate);
+                if (utils.isValidDate(instanceDate))
+                {
+                    fields.add("date : " + instanceDate);
+                }
                 break;
             }else
             {
@@ -515,10 +547,12 @@ public class Passenger {
             String command = scanner.nextLine();
             if (command.equals("1"))
             {
-//                String flightDetail = scanner.nextLine();
                 System.out.print("Please enter the time you want : ");
                 String instanceTime = scanner.nextLine();
-                fields.add("time : " + instanceTime);
+                if (utils.isValid24HourTime(instanceTime))
+                {
+                    fields.add("time : " + instanceTime);
+                }
                 break;
             }else
             {
@@ -539,10 +573,17 @@ public class Passenger {
             String command = scanner.nextLine();
             if (command.equals("1"))
             {
-//                String flightDetail = scanner.nextLine();
-                System.out.print("Please enter the price you want : ");
+                System.out.println("Please enter the price you want : ");
+                System.out.print("Low price : ");
+                String price = scanner.nextLine();
+                int lowPrice = Integer.parseInt(price);
+                System.out.print("Up price : ");
                 String instancePrice = scanner.nextLine();
-                fields.add("price : " + instancePrice);
+                int upPrice = Integer.parseInt(instancePrice);
+                if (utils.isValidNumber(price) && utils.isValidNumber(instancePrice) && utils.isValidRange(lowPrice , upPrice))
+                {
+                    rangeSearch(lowPrice , upPrice ,flightIds ,searchHashMap ,flightHashMap , fields);
+                }
                 break;
             }else
             {
@@ -555,41 +596,48 @@ public class Passenger {
                 }
             }
         }
-//        while (true)
-//        {
-//            String flightDetail = scanner.nextLine();
-//            String instance = scanner.nextLine();
-//            if (searchHashMap.containsKey(flightDetail + instance))
-//            {
-//                for (int i = 0; i < searchHashMap.get(flightDetail + instance).size(); i++) {
-//                    flightIds.add(searchHashMap.get(flightDetail + instance).get(i));
-//                }
-//            }
-//        }
-//        String flightDetail = scanner.nextLine();
-//        String instance = scanner.nextLine();
-//        if (searchHashMap.containsKey(flightDetail + instance))
-//        {
-//            searchHashMap.get(flightDetail + instance).add("2");
-//        }else
-//        {
-//            flightIds.add("2");
-//            searchHashMap.put(flightDetail + instance , flightIds);
-//        }
-//        AirlineSystem airlineSystem = new AirlineSystem();
-        ArrayList<String> searchIds = new ArrayList<String>();
-        andSearch(searchHashMap , fields , searchIds);
+        andSearch(searchHashMap , fields , searchIds , flightIds);
         showSearchs(searchIds , flightHashMap);
     }
     //==================================================================================================================
 
     /**
+     *This method is for price range search field.
+     */
+    public void rangeSearch(int lowPrice , int upPrice , ArrayList<String> flightIds , HashMap <String , ArrayList<String>> searchHashMap , HashMap < String , Flight > flightHashMap , ArrayList<String> fields)
+    {
+        int sizeOfRange = (upPrice/1000) - (lowPrice/1000);
+        int lowRangeOfPrice = lowPrice - (lowPrice % 1000);
+        int upRangeOfPrice = lowPrice + (1000 - (lowPrice % 1000));
+        for (int i = 0; i < sizeOfRange + 1; i++) {
+            lowRangeOfPrice = lowRangeOfPrice + (i * 1000);
+            upRangeOfPrice = upRangeOfPrice + (i * 1000);
+            if (searchHashMap.containsKey("price : " + lowRangeOfPrice + "," + upRangeOfPrice))
+            {
+                for (int j = 0; j < searchHashMap.get("price : " + lowRangeOfPrice + "," + upRangeOfPrice).size(); j++) {
+                    if (flightHashMap.get(searchHashMap.get("price : " + lowRangeOfPrice + "," + upRangeOfPrice).get(j)).getPrice() >= lowPrice && flightHashMap.get(searchHashMap.get("price : " + lowRangeOfPrice + "," + upRangeOfPrice).get(j)).getPrice() <= upPrice)
+                    {
+//                        fields.add("price : " + lowRangeOfPrice + "," + upRangeOfPrice);
+                        flightIds.add(searchHashMap.get("price : " + lowRangeOfPrice + "," + upRangeOfPrice).get(j));
+                    }
+                }
+            }
+        }
+
+    }
+    //==================================================================================================================
+    /**
      *This method is for searching between ideas and intersecting them.
      */
-    public void andSearch(HashMap <String , ArrayList<String>> searchHashMap , ArrayList<String> fields , ArrayList<String> searchIds)
+    public void andSearch(HashMap <String , ArrayList<String>> searchHashMap , ArrayList<String> fields , ArrayList<String> searchIds , ArrayList<String> flightIds)
     {
-        ArrayList<String> flightIds = new ArrayList<String>();
+//        ArrayList<String> flightIds = new ArrayList<String>();
         int count = 0;
+        int countPrice = 0;
+        if (flightIds.size() > 0)
+        {
+            countPrice++;
+        }
         for (int i = 0; i < fields.size(); i++) {
             if (searchHashMap.containsKey(fields.get(i)))
             {
@@ -601,13 +649,13 @@ public class Passenger {
 
         for (int i = 0; i < flightIds.size(); i++) {
             count = 0;
-            for (int j = 0; j < flightIds.size(); j++) {
+            for (int j = i; j < flightIds.size(); j++) {
                 if (flightIds.get(i).equals(flightIds.get(j)))
                 {
                     count++;
                 }
             }
-            if (count == fields.size())
+            if (count >= (fields.size() + countPrice))
             {
                 searchIds.add(flightIds.get(i));
             }

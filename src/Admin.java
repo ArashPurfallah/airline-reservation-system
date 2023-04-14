@@ -179,6 +179,7 @@ public class Admin {
      */
     public void add(HashMap < String , Flight > flightHashMap , HashMap <String , ArrayList <String>> searchHashMap)
     {
+        Utils utils= new Utils();
         System.out.println("Welcome to the add section ;)");
         Scanner scanner = new Scanner(System.in);
         System.out.println("Please add your flight :)");
@@ -203,88 +204,144 @@ public class Admin {
             }
             System.out.println("Second -----> Please enter origin of flight :)");
             String origin = scanner.nextLine();
-            flight.setOrigin(origin);
-            if (searchHashMap.containsKey("origin : " +  flight.getOrigin()))
+            if (utils.isValidCity(origin))
             {
-                if (!searchHashMap.get("origin : " +  flight.getOrigin()).contains(flight.getFlightId()))
+                flight.setOrigin(origin);
+                if (searchHashMap.containsKey("origin : " +  flight.getOrigin()))
                 {
-                    searchHashMap.get("origin : " +  flight.getOrigin()).add(flight.getFlightId());
-                }
-            }else
-            {
+                    if (!searchHashMap.get("origin : " +  flight.getOrigin()).contains(flight.getFlightId()))
+                    {
+                        searchHashMap.get("origin : " +  flight.getOrigin()).add(flight.getFlightId());
+                    }
+                }else
+                {
 //                origins.add(flight.getFlightId());
-                ArrayList<String> origins = new ArrayList<String>();
-                origins.add(flight.getFlightId());
-                searchHashMap.put("origin : " +  flight.getOrigin() , origins);
-            }
-            System.out.println("Third -----> Please enter destination of flight :)");
-            String destination = scanner.nextLine();
-            flight.setDestination(destination);
-            if (searchHashMap.containsKey("destination : " +  flight.getDestination()))
-            {
-                if (!searchHashMap.get("destination : " +  flight.getDestination()).contains(flight.getFlightId()))
-                {
-                    searchHashMap.get("destination : " +  flight.getDestination()).add(flight.getFlightId());
+                    ArrayList<String> origins = new ArrayList<String>();
+                    origins.add(flight.getFlightId());
+                    searchHashMap.put("origin : " +  flight.getOrigin() , origins);
                 }
-            }else
-            {
+                System.out.println("Third -----> Please enter destination of flight :)");
+                String destination = scanner.nextLine();
+                if (utils.isValidCity(destination) && utils.isValidDestination(origin , destination))
+                {
+                    flight.setDestination(destination);
+                    if (searchHashMap.containsKey("destination : " +  flight.getDestination()))
+                    {
+                        if (!searchHashMap.get("destination : " +  flight.getDestination()).contains(flight.getFlightId()))
+                        {
+                            searchHashMap.get("destination : " +  flight.getDestination()).add(flight.getFlightId());
+                        }
+                    }else
+                    {
 //                destinations.add(flight.getFlightId());
-                ArrayList<String> destinations = new ArrayList<String>();
-                destinations.add(flight.getFlightId());
-                searchHashMap.put("destination : " +  flight.getDestination() , destinations);
-            }
-            System.out.println("Fourth -----> Please enter date of flight :)");
-            String date = scanner.nextLine();
-            flight.setDate(date);
-            if (searchHashMap.containsKey("date : " +  flight.getDate()))
-            {
-                if (!searchHashMap.get("date : " +  flight.getDate()).contains(flight.getFlightId()))
-                {
-                    searchHashMap.get("date : " +  flight.getDate()).add(flight.getFlightId());
-                }
-            }else
-            {
+                        ArrayList<String> destinations = new ArrayList<String>();
+                        destinations.add(flight.getFlightId());
+                        searchHashMap.put("destination : " +  flight.getDestination() , destinations);
+                    }
+                    System.out.println("Fourth -----> Please enter date of flight :)");
+                    System.out.println("Date Format Pattern -------> yyyy-MM-dd");
+                    String date = scanner.nextLine();
+                    if (utils.isValidDate(date))
+                    {
+                        flight.setDate(date);
+                        if (searchHashMap.containsKey("date : " +  flight.getDate()))
+                        {
+                            if (!searchHashMap.get("date : " +  flight.getDate()).contains(flight.getFlightId()))
+                            {
+                                searchHashMap.get("date : " +  flight.getDate()).add(flight.getFlightId());
+                            }
+                        }else
+                        {
 //                dates.add(flight.getFlightId());
-                ArrayList<String> dates = new ArrayList<String>();
-                dates.add(flight.getFlightId());
-                searchHashMap.put("date : " +  flight.getDate() , dates);
-            }
-            System.out.println("Fifth ----> Please enter time of flight :)");
-            String time = scanner.nextLine();
-            flight.setTime(time);
-            if (searchHashMap.containsKey("time : " +  flight.getTime()))
-            {
-                if (!searchHashMap.get("time : " +  flight.getTime()).contains(flight.getFlightId()))
-                {
-                    searchHashMap.get("time : " +  flight.getTime()).add(flight.getFlightId());
-                }
-            }else
-            {
+                            ArrayList<String> dates = new ArrayList<String>();
+                            dates.add(flight.getFlightId());
+                            searchHashMap.put("date : " +  flight.getDate() , dates);
+                        }
+                        System.out.println("Fifth ----> Please enter time of flight :)");
+                        System.out.println("Time Format Pattern ----> hh:mm");
+                        String time = scanner.nextLine();
+                        if (utils.isValid24HourTime(time))
+                        {
+                            flight.setTime(time);
+                            if (searchHashMap.containsKey("time : " +  flight.getTime()))
+                            {
+                                if (!searchHashMap.get("time : " +  flight.getTime()).contains(flight.getFlightId()))
+                                {
+                                    searchHashMap.get("time : " +  flight.getTime()).add(flight.getFlightId());
+                                }
+                            }else
+                            {
 //                times.add(flight.getFlightId());
-                ArrayList<String> times = new ArrayList<String>();
-                times.add(flight.getFlightId());
-                searchHashMap.put("time : " +  flight.getTime() , times);
-            }
-            System.out.println("Sixth ----> Please enter price of flight :)");
-            int price = scanner.nextInt();
-            flight.setPrice(price);
-            if (searchHashMap.containsKey("price : " +  flight.getPrice()))
-            {
-                if (!searchHashMap.get("price : " +  flight.getPrice()).contains(flight.getFlightId()))
+                                ArrayList<String> times = new ArrayList<String>();
+                                times.add(flight.getFlightId());
+                                searchHashMap.put("time : " +  flight.getTime() , times);
+                            }
+                            System.out.println("Sixth ----> Please enter price of flight :)");
+//                            int price = scanner.nextInt();
+                            String price1 = scanner.nextLine();
+                            if (utils.isValidNumber(price1))
+                            {
+                                int price = Integer.parseInt(price1);
+                                flight.setPrice(price);
+                                int lowRangeOfPrice = price - (price % 1000);
+                                int upRangeOfPrice = price + (1000 - (price % 1000));
+//            if (searchHashMap.containsKey("price : " +  flight.getPrice()))
+//            {
+//                if (!searchHashMap.get("price : " +  flight.getPrice()).contains(flight.getFlightId()))
+//                {
+//                    searchHashMap.get("price : " +  flight.getPrice()).add(flight.getFlightId());
+//                }
+//            }else
+//            {
+////                prices.add(flight.getFlightId());
+//                ArrayList<String> prices = new ArrayList<String>();
+//                prices.add(flight.getFlightId());
+//                searchHashMap.put("price : " +  flight.getPrice() , prices);
+//            }
+                                if (searchHashMap.containsKey("price : " + lowRangeOfPrice + "," + upRangeOfPrice))
+                                {
+                                    if (!searchHashMap.get("price : " + lowRangeOfPrice + "," + upRangeOfPrice).contains(flight.getFlightId()))
+                                    {
+                                        searchHashMap.get("price : " + lowRangeOfPrice + "," + upRangeOfPrice).add(flight.getFlightId());
+                                    }
+                                }else
+                                {
+                                    ArrayList<String> prices = new ArrayList<String>();
+                                    prices.add(flight.getFlightId());
+                                    searchHashMap.put("price : " + lowRangeOfPrice + "," + upRangeOfPrice , prices);
+                                }
+                                System.out.println("Seventh ----> Please enter seats :)");
+                                String seats1 = scanner.nextLine();
+                                int seats = Integer.parseInt(seats1);
+                                if (utils.isValidNumber(seats1))
+                                {
+                                    flight.setSeats(seats);
+                                    System.out.println("Your flight is added ;)");
+                                    flightHashMap.put(flight.getFlightId(), flight);
+                                }else
+                                {
+                                    System.out.println("your seats is not valid :(");
+                                }
+                            }else
+                            {
+                                System.out.println("your price is not valid :(");
+                            }
+                        }else
+                        {
+                            System.out.println("your time is not valid :(");
+                        }
+                    }else
+                    {
+                        System.out.println("your date is not valid :(");
+                    }
+                }else
                 {
-                    searchHashMap.get("price : " +  flight.getPrice()).add(flight.getFlightId());
+                    System.out.println("your destination is not valid :(");
                 }
             }else
             {
-//                prices.add(flight.getFlightId());
-                ArrayList<String> prices = new ArrayList<String>();
-                prices.add(flight.getFlightId());
-                searchHashMap.put("price : " +  flight.getPrice() , prices);
+                System.out.println("your origin is not valid :(");
             }
-            System.out.println("Seventh ----> Please enter seats :)");
-            flight.setSeats(scanner.nextInt());
-            System.out.println("Your flight is added ;)");
-            flightHashMap.put(flight.getFlightId(), flight);
         }else
         {
             System.out.println("This flight has a problem :|");
@@ -299,6 +356,7 @@ public class Admin {
     {
         System.out.println("Welcome to the update section ;)");
         Scanner scanner = new Scanner(System.in);
+        Utils utils = new Utils();
         System.out.println("Please update your flight :)");
         System.out.print("First -----> Please enter flight id :");
         String flightId = scanner.nextLine();
@@ -348,69 +406,94 @@ public class Admin {
                     searchHashMap.get("date : " +  flightHashMap.get(flightId).getDate()).remove(flightId);
                     System.out.println("Before : " + flightHashMap.get(flightId).getDate());
                     System.out.print("Now : ");
-                    flightHashMap.get(flightId).setDate(scanner.nextLine());
-                    if (searchHashMap.containsKey("date : " +  flightHashMap.get(flightId).getDate()))
+                    String date = scanner.nextLine();
+                    if (utils.isValidDate(date))
                     {
-                        if (!searchHashMap.get("date : " +  flightHashMap.get(flightId).getDate()).contains(flightId))
+                        flightHashMap.get(flightId).setDate(date);
+                        if (searchHashMap.containsKey("date : " +  flightHashMap.get(flightId).getDate()))
                         {
-                            searchHashMap.get("date : " +  flightHashMap.get(flightId).getDate()).add(flightId);
+                            if (!searchHashMap.get("date : " +  flightHashMap.get(flightId).getDate()).contains(flightId))
+                            {
+                                searchHashMap.get("date : " +  flightHashMap.get(flightId).getDate()).add(flightId);
+                            }
+                        }else
+                        {
+//                        dates.add(flightId);
+                            ArrayList<String> dates = new ArrayList<String>();
+                            dates.add(flightId);
+                            searchHashMap.put("date : " +  flightHashMap.get(flightId).getDate() , dates);
                         }
+                        System.out.println("Your flight is updated ;)");
                     }else
                     {
-//                        dates.add(flightId);
-                        ArrayList<String> dates = new ArrayList<String>();
-                        dates.add(flightId);
-                        searchHashMap.put("date : " +  flightHashMap.get(flightId).getDate() , dates);
+                        System.out.println("your date is not valid :(");
                     }
-                    System.out.println("Your flight is updated ;)");
                     break;
                 }else
                 {
                     if (command.equals("2"))
                     {
                         System.out.println("Please enter time of flight :)");
-                        searchHashMap.get("time : " + flightHashMap.get(flightId).getTime());
+                        searchHashMap.get("time : " + flightHashMap.get(flightId).getTime()).remove(flightId);
                         System.out.println("Before : " + flightHashMap.get(flightId).getTime());
                         System.out.print("Now : ");
-                        flightHashMap.get(flightId).setTime(scanner.nextLine());
-                        if (searchHashMap.containsKey("time : " +  flightHashMap.get(flightId).getTime()))
+                        String time = scanner.nextLine();
+                        if (utils.isValid24HourTime(time))
                         {
-                            if (!searchHashMap.get("time : " +  flightHashMap.get(flightId).getTime()).contains(flightId))
+                            flightHashMap.get(flightId).setTime(time);
+                            if (searchHashMap.containsKey("time : " +  flightHashMap.get(flightId).getTime()))
                             {
-                                searchHashMap.get("time : " +  flightHashMap.get(flightId).getTime()).add(flightId);
+                                if (!searchHashMap.get("time : " +  flightHashMap.get(flightId).getTime()).contains(flightId))
+                                {
+                                    searchHashMap.get("time : " +  flightHashMap.get(flightId).getTime()).add(flightId);
+                                }
+                            }else
+                            {
+//                            times.add(flightId);
+                                ArrayList<String> times = new ArrayList<String>();
+                                times.add(flightId);
+                                searchHashMap.put("time : " +  flightHashMap.get(flightId).getTime() , times);
                             }
+                            System.out.println("Your flight is updated ;)");
                         }else
                         {
-//                            times.add(flightId);
-                            ArrayList<String> times = new ArrayList<String>();
-                            times.add(flightId);
-                            searchHashMap.put("time : " +  flightHashMap.get(flightId).getTime() , times);
+                            System.out.println("your time is not valid :(");
                         }
-                        System.out.println("Your flight is updated ;)");
                         break;
                     }else
                     {
                         if (command.equals("3"))
                         {
                             System.out.println("Please enter price of flight :)");
-                            searchHashMap.get("price : " + flightHashMap.get(flightId).getPrice());
                             System.out.println("Before : " + flightHashMap.get(flightId).getPrice());
                             System.out.print("Now : ");
-                            flightHashMap.get(flightId).setPrice(scanner.nextInt());
-                            if (searchHashMap.containsKey("price : " +  flightHashMap.get(flightId).getPrice()))
+                            String price1 = scanner.nextLine();
+                            if (utils.isValidNumber(price1))
                             {
-                                if (!searchHashMap.get("price : " +  flightHashMap.get(flightId).getPrice()).contains(flightId))
+                                int price = Integer.parseInt(price1);
+//                            int price = scanner.nextInt();
+                                flightHashMap.get(flightId).setPrice(price);
+                                int lowRangeOfPrice = price - (price % 1000);
+                                int upRangeOfPrice = price + (1000 - (price % 1000));
+                                searchHashMap.get("price : " + lowRangeOfPrice + "," + upRangeOfPrice).remove(flightId);
+                                if (searchHashMap.containsKey("price : " + lowRangeOfPrice + "," + upRangeOfPrice))
                                 {
-                                    searchHashMap.get("price : " +  flightHashMap.get(flightId).getPrice()).add(flightId);
+                                    if (!searchHashMap.get("price : " + lowRangeOfPrice + "," + upRangeOfPrice).contains(flightId))
+                                    {
+                                        searchHashMap.get("price : " +  + lowRangeOfPrice + "," + upRangeOfPrice).add(flightId);
+                                    }
+                                }else
+                                {
+//                                prices.add(flightId);
+                                    ArrayList<String> prices = new ArrayList<String>();
+                                    prices.add(flightId);
+                                    searchHashMap.put("price : " + lowRangeOfPrice + "," + upRangeOfPrice , prices);
                                 }
+                                System.out.println("Your flight is updated ;)");
                             }else
                             {
-//                                prices.add(flightId);
-                                ArrayList<String> prices = new ArrayList<String>();
-                                prices.add(flightId);
-                                searchHashMap.put("price : " +  flightHashMap.get(flightId).getPrice() , prices);
+                                System.out.println("your price is not valid :(");
                             }
-                            System.out.println("Your flight is updated ;)");
                             break;
                         }else
                         {
@@ -419,8 +502,16 @@ public class Admin {
                                 System.out.println("Please enter seats :)");
                                 System.out.println("Before : " + flightHashMap.get(flightId).getSeats());
                                 System.out.print("Now : ");
-                                flightHashMap.get(flightId).setPrice(scanner.nextInt());
-                                System.out.println("Your flight is updated ;)");
+                                String seats1 = scanner.nextLine();
+                                if (utils.isValidNumber(seats1))
+                                {
+                                    int seats = Integer.parseInt(seats1);
+                                    flightHashMap.get(flightId).setPrice(seats);
+                                    System.out.println("Your flight is updated ;)");
+                                }else
+                                {
+                                    System.out.println("your seats is not valid :(");
+                                }
                                 break;
                             }else
                             {
@@ -468,7 +559,10 @@ public class Admin {
                     searchHashMap.get("destination : " + flightHashMap.get(flightId).getDestination()).remove(flightId);
                     searchHashMap.get("date : " + flightHashMap.get(flightId).getDate()).remove(flightId);
                     searchHashMap.get("time : " + flightHashMap.get(flightId).getTime()).remove(flightId);
-                    searchHashMap.get("price : " + flightHashMap.get(flightId).getPrice()).remove(flightId);
+                    int price = flightHashMap.get(flightId).getPrice();
+                    int lowRangeOfPrice = price - (price % 1000);
+                    int upRangeOfPrice = price + (1000 - (price % 1000));
+                    searchHashMap.get("price : " + lowRangeOfPrice + "," + upRangeOfPrice).remove(flightId);
                     System.out.println("Your flight is removed ;)");
                     if (flightPassengersHashMap.containsKey(flightHashMap.get(flightId)))
                     {
