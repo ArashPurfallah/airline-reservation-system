@@ -7,14 +7,16 @@ public class AirlineSystem {
     private HashMap < String , Flight > flightHashMap;
     private HashMap <String , ArrayList <String>> searchHashMap;
     private HashMap <Flight , ArrayList <Passenger>> flightPassengersHashMap;
-    private HashMap<Integer , Flight> ticketHashMap;
+    private HashMap<Integer , Ticket> ticketHashMap;
     private int ticketId;
+    private Admin admin;
     public AirlineSystem() {
         this.passengerHashMap = new HashMap<String, Passenger>();
         this.flightHashMap = new HashMap<String , Flight>();
         this.searchHashMap = new HashMap<String , ArrayList<String>>();
         this.flightPassengersHashMap = new HashMap<Flight , ArrayList <Passenger>>();
-        this.ticketHashMap = new HashMap<Integer , Flight>();
+        this.ticketHashMap = new HashMap<Integer , Ticket>();
+        this.admin = new Admin("Arash Purfallah" , "admin1234");
     }
     public HashMap<String, Passenger> getPassengerHashMap() {
         return passengerHashMap;
@@ -48,11 +50,11 @@ public class AirlineSystem {
         this.flightPassengersHashMap = flightPassengersHashMap;
     }
 
-    public HashMap<Integer, Flight> getTicketHashMap() {
+    public HashMap<Integer, Ticket> getTicketHashMap() {
         return ticketHashMap;
     }
 
-    public void setTicketHashMap(HashMap<Integer, Flight> ticketHashMap) {
+    public void setTicketHashMap(HashMap<Integer, Ticket> ticketHashMap) {
         this.ticketHashMap = ticketHashMap;
     }
 
@@ -64,12 +66,19 @@ public class AirlineSystem {
         this.ticketId = ticketId;
     }
 
-    //==================================================================================================================
+    public Admin getAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(Admin admin) {
+        this.admin = admin;
+    }
+//==================================================================================================================
 
     /**
      *This method is for main menu options.
      */
-    public void mainMenu(Admin admin)
+    public void mainMenu()
     {
         Scanner scanner = new Scanner(System.in);
         String command;
@@ -84,12 +93,12 @@ public class AirlineSystem {
             {
                 case "1":
 //                    System.out.println("Sign in :)");
-                    signIn(this.passengerHashMap , admin);
+                    signIn(this.passengerHashMap);
                     break;
                 case "2":
 //                    System.out.println("Sign up ;)");
                     Passenger passenger = new Passenger();
-                    signUp(this.passengerHashMap , passenger , admin);
+                    signUp(this.passengerHashMap , passenger);
                     break;
                 default:
                     System.out.println("Not found :|");
@@ -121,7 +130,7 @@ public class AirlineSystem {
     /**
      * This method is for sign up for passengers.
      */
-    public void signUp(HashMap<String , Passenger> passengerHashMap , Passenger passenger , Admin admin)
+    public void signUp(HashMap<String , Passenger> passengerHashMap , Passenger passenger)
     {
         Scanner scanner = new Scanner(System.in);
 //        ArrayList<AirlineSystem> humanArrayList = new ArrayList<AirlineSystem>();
@@ -132,7 +141,18 @@ public class AirlineSystem {
         System.out.println("Please Choose a username for your account :)");
 //        String userName1 = scanner.nextLine();
 //        passenger.setUserName(userName1);
-        passenger.setUserName(scanner.nextLine());
+        String userName = scanner.nextLine();
+        while (true)
+        {
+            if (userName.isEmpty())
+            {
+                System.out.println("Invalid : ");
+                userName = scanner.nextLine();
+            }else
+            {
+                break;
+            }
+        }
 //        human.getUserName();
 //        while (true)
 //        {
@@ -161,7 +181,18 @@ public class AirlineSystem {
         System.out.println("Please Choose a password for your account :)");
 //        String pass = scanner.nextLine();
 //        passenger.setPassword(pass);
-        passenger.setPassword(scanner.nextLine());
+        String password = scanner.nextLine();
+        while (true)
+        {
+            if (password.isEmpty())
+            {
+                System.out.println("Invalid : ");
+                password = scanner.nextLine();
+            }else
+            {
+                break;
+            }
+        }
 //        if (passengerArrayList.contains(passenger)) {
 //            System.out.println("This username has already been selected. Please choose another username;)");
 //            passenger.setUserName(scanner.nextLine());
@@ -172,17 +203,21 @@ public class AirlineSystem {
 //        }
         while (true)
         {
-            if (passengerHashMap.containsKey(passenger.getUserName())) {
+            if (passengerHashMap.containsKey(userName)) {
                 System.out.println("This username has already been selected. Please choose another username;)");
-                passenger.setUserName(scanner.nextLine());
+//                passenger.setUserName(scanner.nextLine());
+                userName = scanner.nextLine();
             }else
             {
-               if (passenger.getUserName().equals(admin.getUserName()))
+               if (userName.equals(admin.getUserName()))
                {
                    System.out.println("This username has already been selected. Please choose another username;)");
-                   passenger.setUserName(scanner.nextLine());
+//                   passenger.setUserName(scanner.nextLine());
+                   userName = scanner.nextLine();
                }else
                {
+                   passenger.setUserName(userName);
+                   passenger.setPassword(password);
                    break;
                }
             }
@@ -214,31 +249,28 @@ public class AirlineSystem {
     /**
      *This method is for sign in for people.
      */
-    public void signIn(HashMap<String , Passenger> passengerHashMap , Admin admin)
+    public void signIn(HashMap<String , Passenger> passengerHashMap)
     {
         Scanner scanner = new Scanner(System.in);
-        Passenger passenger = new Passenger();
         System.out.println("Please enter your username :)");
         String userName = scanner.nextLine();
-        passenger.setUserName(userName);
         System.out.println("Please enter your password :)");
         String pass = scanner.nextLine();
-        passenger.setPassword(pass);
-        if (passengerHashMap.containsKey(passenger.getUserName()))
+        if (passengerHashMap.containsKey(userName))
         {
-            if (passengerHashMap.get(passenger.getUserName()).getPassword().equals(passenger.getPassword()))
+            if (passengerHashMap.get(userName).getPassword().equals(pass))
             {
 //                System.out.println("Menu Passenger");
-                menuPassenger(this.flightHashMap , passengerHashMap , passenger , this.searchHashMap , admin);
+                menuPassenger(this.flightHashMap , passengerHashMap , passengerHashMap.get(userName) , this.searchHashMap);
             }
         }else
         {
-            if (admin.getUserName().equals(passenger.getUserName()))
+            if (admin.getUserName().equals(userName))
             {
-                if (admin.getPassword().equals(passenger.getPassword()))
+                if (admin.getPassword().equals(pass))
                 {
 //                    System.out.println("Menu Admin");
-                    menuAdmin(this.flightHashMap , this.searchHashMap , admin);
+                    menuAdmin(this.flightHashMap , this.searchHashMap);
                 }
             }else
             {
@@ -251,7 +283,7 @@ public class AirlineSystem {
     /**
      *This method is for admin menu options.
      */
-    public void menuAdmin(HashMap < String , Flight > flightHashMap , HashMap <String , ArrayList<String>> searchHashMap , Admin admin)
+    public void menuAdmin(HashMap < String , Flight > flightHashMap , HashMap <String , ArrayList<String>> searchHashMap)
     {
         Scanner scanner = new Scanner(System.in);
         //HashMap < String , Flight > flightHashMap = new HashMap<>();
@@ -272,9 +304,10 @@ public class AirlineSystem {
                     System.out.println("---------------------------------------------------------------");
                     System.out.println("Now you can add another flight with enter R:)");
                     System.out.println("OR you can back to the  menu with enter M:)");
+                    String commandR;
                     while (true)
                     {
-                        String commandR = scanner.nextLine();
+                        commandR = scanner.nextLine();
                         if (commandR.equals("R"))
                         {
                             admin.add(flightHashMap , searchHashMap);
@@ -301,7 +334,7 @@ public class AirlineSystem {
                     System.out.println("OR you can back to the  menu with enter M:)");
                     while (true)
                     {
-                        String commandR = scanner.nextLine();
+                        commandR = scanner.nextLine();
                         if (commandR.equals("R"))
                         {
                             admin.update(flightHashMap , searchHashMap);
@@ -322,16 +355,16 @@ public class AirlineSystem {
                     break;
                 case "3":
 //                    System.out.println("Remove :)");
-                    admin.remove(flightHashMap , searchHashMap , flightPassengersHashMap);
+                    admin.remove(flightHashMap , searchHashMap , flightPassengersHashMap , ticketHashMap);
                     System.out.println("---------------------------------------------------------------");
                     System.out.println("Now you can remove another flight with enter R:)");
                     System.out.println("OR you can back to the  menu with enter M:)");
                     while (true)
                     {
-                        String commandR = scanner.nextLine();
+                        commandR = scanner.nextLine();
                         if (commandR.equals("R"))
                         {
-                            admin.remove(flightHashMap , searchHashMap , flightPassengersHashMap);
+                            admin.remove(flightHashMap , searchHashMap , flightPassengersHashMap , ticketHashMap);
                             System.out.println("---------------------------------------------------------------");
                             System.out.println("Now you can remove another flight with enter R:)");
                             System.out.println("OR you can back to the  menu with enter M:)");
@@ -365,7 +398,7 @@ public class AirlineSystem {
                     break;
                 case "0":
                     System.out.println("Sign out :)");
-                    mainMenu(admin);
+                    mainMenu();
                     break;
                 default:
                     System.out.println("Not found :|");
@@ -400,7 +433,7 @@ public class AirlineSystem {
     /**
      *This method is for passenger menu options.
      */
-    public void menuPassenger(HashMap < String , Flight > flightHashMap , HashMap<String, Passenger> passengerHashMap , Passenger passenger , HashMap <String , ArrayList <String>> searchHashMap , Admin admin)
+    public void menuPassenger(HashMap < String , Flight > flightHashMap , HashMap<String, Passenger> passengerHashMap , Passenger passenger , HashMap <String , ArrayList <String>> searchHashMap)
     {
         Scanner scanner = new Scanner(System.in);
         String command;
@@ -411,7 +444,7 @@ public class AirlineSystem {
             {
                 case "1":
 //                    System.out.println("Change password :)");
-                    passenger.changePassword(passengerHashMap);
+                    passenger.changePassword(passengerHashMap , passenger);
                     System.out.println("---------------------------------------------------------------");
                     System.out.println("Now you can change your password again with enter R:)");
                     System.out.println("OR you can back to the  menu with enter M:)");
@@ -420,7 +453,7 @@ public class AirlineSystem {
                         String commandR = scanner.nextLine();
                         if (commandR.equals("R"))
                         {
-                            passenger.changePassword(passengerHashMap);
+                            passenger.changePassword(passengerHashMap , passenger);
                             System.out.println("---------------------------------------------------------------");
                             System.out.println("Now you can change your password again with enter R:)");
                             System.out.println("OR you can back to the  menu with enter M:)");
@@ -465,7 +498,7 @@ public class AirlineSystem {
                     break;
                 case "3":
 //                    System.out.println("Booking ticket :)");
-                    passenger.bookingTicket(passenger , flightHashMap , ticketHashMap, ticketId , flightPassengersHashMap);
+                    passenger.bookingTicket(passenger , flightHashMap , ticketHashMap , flightPassengersHashMap);
                     System.out.println("---------------------------------------------------------------");
                     System.out.println("Now you can booking ticket again with enter R:)");
                     System.out.println("OR you can back to the  menu with enter M:)");
@@ -474,7 +507,7 @@ public class AirlineSystem {
                         String commandR = scanner.nextLine();
                         if (commandR.equals("R"))
                         {
-                            passenger.bookingTicket(passenger , flightHashMap , ticketHashMap , ticketId , flightPassengersHashMap);
+                            passenger.bookingTicket(passenger , flightHashMap , ticketHashMap , flightPassengersHashMap);
                             System.out.println("---------------------------------------------------------------");
                             System.out.println("Now you can booking ticket again with enter R:)");
                             System.out.println("OR you can back to the  menu with enter M:)");
@@ -492,7 +525,7 @@ public class AirlineSystem {
                     break;
                 case "4":
 //                    System.out.println("Ticket cancellation :)");
-                    passenger.ticketCancellation(ticketHashMap , passenger , flightPassengersHashMap);
+                    passenger.ticketCancellation(ticketHashMap , passenger , flightPassengersHashMap , flightHashMap);
                     System.out.println("---------------------------------------------------------------");
                     System.out.println("Now you can cancel ticket with enter R:)");
                     System.out.println("OR you can back to the  menu with enter M:)");
@@ -501,7 +534,7 @@ public class AirlineSystem {
                         String commandR = scanner.nextLine();
                         if (commandR.equals("R"))
                         {
-                            passenger.ticketCancellation(ticketHashMap , passenger , flightPassengersHashMap);
+                            passenger.ticketCancellation(ticketHashMap , passenger , flightPassengersHashMap , flightHashMap);
                             System.out.println("---------------------------------------------------------------");
                             System.out.println("Now you can cancel ticket with enter R:)");
                             System.out.println("OR you can back to the  menu with enter M:)");
@@ -519,7 +552,7 @@ public class AirlineSystem {
                     break;
                 case "5":
 //                    System.out.println("Booked tickets :)");
-                    passenger.bookedTickets(ticketHashMap);
+                    passenger.bookedTickets(ticketHashMap , passenger , flightHashMap);
                     System.out.println("Now you can back to the  menu with enter M:)");
                     while (true)
                     {
@@ -562,7 +595,7 @@ public class AirlineSystem {
                     break;
                 case "0":
                     System.out.println("Sign out :)");
-                    mainMenu(admin);
+                    mainMenu();
                     break;
                 default:
                     System.out.println("Not found :|");

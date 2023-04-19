@@ -26,11 +26,11 @@ public class Main {
 //                    break;
 //            }
 //        }
-        Admin admin = new Admin("Arash Purfallah" , "admin1234");
-        admin.setUserName("Arash Purfallah");
-        admin.setPassword("admin1234");
+//        Admin admin = new Admin("Arash Purfallah" , "admin1234");
+//        admin.setUserName("Arash Purfallah");
+//        admin.setPassword("admin1234");
         AirlineSystem airlineSystem = new AirlineSystem();
-        airlineSystem.mainMenu(admin);
+        airlineSystem.mainMenu();
     }
     //------------------------------------------------------------------------------------------------------------------
 //    public static String printMenu()

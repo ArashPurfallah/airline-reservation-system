@@ -1,9 +1,14 @@
 import java.util.HashMap;
 
 public class Ticket {
-    private int ticketId;
+    private static int ticketId;
     private String passengerUserName;
     private String flightId;
+
+    public Ticket() {
+        ticketId++;
+    }
+
     public int getTicketId() {
         return ticketId;
     }
