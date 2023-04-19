@@ -88,21 +88,25 @@ public class AirlineSystem {
 //        AirlineSystem airlineSystem = new AirlineSystem();
         while (true)
         {
-            command = printMenu();
-            switch (command)
-            {
-                case "1":
+            try {
+                command = printMenu();
+                switch (command) {
+                    case "1":
 //                    System.out.println("Sign in :)");
-                    signIn(this.passengerHashMap);
-                    break;
-                case "2":
+                        signIn(this.passengerHashMap);
+                        break;
+                    case "2":
 //                    System.out.println("Sign up ;)");
-                    Passenger passenger = new Passenger();
-                    signUp(this.passengerHashMap , passenger);
-                    break;
-                default:
-                    System.out.println("Not found :|");
-                    break;
+                        Passenger passenger = new Passenger();
+                        signUp(this.passengerHashMap, passenger);
+                        break;
+                    default:
+                        System.out.println("Not found :|");
+                        break;
+                }
+            }catch (Exception ex)
+            {
+                System.err.println(ex.getMessage());
             }
         }
     }

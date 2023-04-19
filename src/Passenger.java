@@ -355,7 +355,7 @@ public class Passenger {
         System.out.println("Your flights that have been booked so far ---->");
         System.out.println("|FlightId    |FlightId    |Origin      |Destination |Date        |Time        |Price       |Seats       |");
         for(Integer key: ticketHashMap.keySet()) {
-            if (ticketHashMap.get(key).getPassengerUserName().equals(passenger.userName)) {
+            if (ticketHashMap.get(key).getPassengerUserName().equals(passenger.getUserName())) {
                 System.out.printf("|%-12d|%-12s|%-12s|%-12s|%-12s|%-12s|%,-12d|%-12d|", key , ticketHashMap.get(key).getFlightId(), flightHashMap.get(ticketHashMap.get(key).getFlightId()).getOrigin(), flightHashMap.get(ticketHashMap.get(key).getFlightId()).getDestination(), flightHashMap.get(ticketHashMap.get(key).getFlightId()).getDate(), flightHashMap.get(ticketHashMap.get(key).getFlightId()).getTime(), flightHashMap.get(ticketHashMap.get(key).getFlightId()).getPrice(), flightHashMap.get(ticketHashMap.get(key).getFlightId()).getSeats());
                 System.out.println();
             }
@@ -376,7 +376,7 @@ public class Passenger {
         if (utils.isValidNumber(ticketId) && !(ticketId.isEmpty()))
         {
             int ticketId1 = Integer.parseInt(ticketId);
-            if (ticketHashMap.containsKey(ticketId1))
+            if (ticketHashMap.containsKey(ticketId1) && ticketHashMap.get(ticketId1).getPassengerUserName().equals(passenger.getUserName()))
             {
                 System.out.println("Origin : " + flightHashMap.get(ticketHashMap.get(ticketId1).getFlightId()).getOrigin());
                 System.out.println("Destination : " + flightHashMap.get(ticketHashMap.get(ticketId1).getFlightId()).getDestination());
